@@ -21,4 +21,5 @@ def apply(*args,operator):
         return "No valid operator"
     
 print(apply(1,2,3,4,5,operator="*"))
+print(apply(1,2,3,4,5,operator="+"))
 
