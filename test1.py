@@ -1,32 +1,34 @@
-# Assume we have a dictionary called 'transaction' with some data
-transaction = {
-    "payload": {
-        "account_number_id": 12345,
-        "amount": 100.00,
-        "description": "Payment"
-    },
-    "Hello": {
-        "world": "string"
-    },
+def calculate_average_grade(students_list):
+    total_sum = 0
+    total_count = 0
 
-    "sikinawnaw": "ali hamoud",
-    "count": 1
-}
+    for student in students_list:
+        grades = student['grades']
+        total_sum += sum(grades)
+        total_count += len(grades)
 
-transaction1 = {
-    "payload": {
-        "old_source_reference_number": "ABC123",
-        "amount": 150.00,
-        "description": "Refund"
+    average_grade = total_sum / total_count
+    return average_grade
+
+# Example list of students
+students_list = [
+    {
+        'name': 'Jose',
+        'school': 'Computing',
+        'grades': (66, 77, 88)
+    },
+    {
+        'name': 'Emma',
+        'school': 'Engineering',
+        'grades': (75, 82, 91)
+    },
+    {
+        'name': 'Michael',
+        'school': 'Mathematics',
+        'grades': (88, 91, 78)
     }
-}
+]
 
-old_source_reference_number = transaction1["payload"]["old_source_reference_number"]
-test = transaction["payload"].get("description")
-test2 = transaction1["payload"].get("old_source_reference_number")
-test3 = transaction["sikinawnaw"]
-test4 = transaction.pop("count")
-
-
-print(transaction)
-print(test4)
+# Calculate and print the average grade using the function
+average_grade = calculate_average_grade(students_list)
+print(f"Average Grade for the Entire Class: {average_grade:.2f}")
