@@ -4,7 +4,7 @@ class Book:
     def __init__(self, name,book_type,weight):
         self.name = name
         self.book_type = book_type
-        self.weight = weight
+        self.weight = weight 
         
     def __repr__(self):
         return f"{self.name} : {self.book_type} : {self.weight}"
