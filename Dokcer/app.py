@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 stores = [
     {
-        "name" : "My Store",
+        "name" : "MyStore",
         "items":[
             {
                   "name" : "chair",
@@ -36,4 +36,15 @@ def create_item(name):
             new_item = {"name":request_data["name"],"price":request_data["price"]}
             store["items"].append(new_item)
             return new_item, 201
-    return {"message":"Store not found"}, 404
+    return {"message":"Store Not found"}, 404
+
+@app.get("/store/<string:name>")
+def get_store_by_name(name: str):
+    for store in stores:
+        if store["name"] == name:
+            return store
+    # raise HTTPException(status_code=404, detail="Store not found")
+    return {"message":"Store Not Found"}, 404
+
+if __name__ == "__main__":
+    app.run()
