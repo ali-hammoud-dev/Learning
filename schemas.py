@@ -2,12 +2,12 @@ from marshmallow import Schema, fields
 
 
 class PlainItemSchema(Schema):
-    id = fields.Str(dump_only=True) ## used for returning data
+    id = fields.Str(dump_only=True) 
     name = fields.Str(required=True)
     price = fields.Float(required=True)
     
 class PlainStoreSchema(Schema):
-    id = fields.Str(dump_only=True) ## used for returning data
+    id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
     
     
