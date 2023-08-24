@@ -1,8 +1,10 @@
-import uuid
 from flask.views import MethodView
 from flask_smorest import abort,Blueprint
+from models import StoreModel
+from sqlalchemy.exc import SQLAlchemyError,IntegrityError
 
 from schemas import StoreSchema
+from db import db
 
 blp =Blueprint("stores",__name__,description="Operations on stores")
 
@@ -10,33 +12,39 @@ blp =Blueprint("stores",__name__,description="Operations on stores")
 class Store(MethodView):
     @blp.response(200,StoreSchema)
     def get(self,store_id):
-         try:
-            return stores[store_id]
-         except KeyError:
-            abort(404,message="Store not dound")
-    
+      return StoreModel.query.get_or_404(store_id)
     
     def delete(self,store_id):
-         try:
-            del stores[store_id]
-            return {"message":"Store deleted."}
-         except KeyError:
-           abort(404,message="Store not found !")
-           
+        store =  StoreModel.query.get(store_id)
+        db.session.delete(store)
+        db.session.commit()
+        return {"message":"Item Deleted."}
+
 @blp.route("/store")
 class StoreList(MethodView):
     @blp.response(200,StoreSchema(many=True))
     def get(self):
-        return stores.values()
+        return StoreModel.query.all()
     
     @blp.arguments(StoreSchema)
     @blp.response(200,StoreSchema)
     def post(self,store_data):
-        for store in stores.values():
-            if store["name"] == store_data["name"]:
-                abort(400,message=f"Store already exists.")
-            
-        store_id = uuid.uuid4().hex
-        new_store = {**store_data,"id":store_id}
-        stores[store_id] = new_store
-        return new_store
+       store = StoreModel(**store_data)
+       
+       try:
+           db.session.add(store)
+           db.session.commit()
+       except IntegrityError:
+           abort(400,message="A Store with that name already exists.")
+       except SQLAlchemyError:
+           abort(500,message="An Error occured while inserting ...")
+           
+       return store_data
+   
+    def delete(self):
+        all_stores = StoreModel.query.all()
+        for store in all_stores:
+            db.session.delete(store)
+        
+        db.session.commit()
+        return{"message":"All Stores are deleted !"}
