@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_smorest import Api
+# from flask_migrate import Migrate
 
 from db import db
 import models
@@ -22,14 +23,9 @@ def create_app(db_url:str=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL","sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
-
+    # migrate = Migrate(app)
     api = Api(app)
     
-    @app.before_request
-    def create_tables():
-        db.create_all()
-    
-
     api.register_blueprint(ItemBluePrint)
     api.register_blueprint(StoreBluePrint)
     
