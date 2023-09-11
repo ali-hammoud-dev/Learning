@@ -1,15 +1,17 @@
 import os
 from flask import Flask
 from flask_smorest import Api
-# from flask_migrate import Migrate
+from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 from db import db
 import models
+import secrets
 
 from resources.item import blp as ItemBluePrint
 from resources.store import blp as StoreBluePrint
+from resources.user import blp as UserBluePrint
 
-##factory pattern
 def create_app(db_url:str=None):
     app = Flask(__name__)
 
@@ -23,11 +25,19 @@ def create_app(db_url:str=None):
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL","sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
-    # migrate = Migrate(app)
+    migrate = Migrate(app,db)
     api = Api(app)
-    
+
+    app.config["JWT_SECRET_KEY"] = "10112629490191749059973330411681028864"
+    jwt = JWTManager(app)
+
+    @app.before_request
+    def create_tables():
+        db.create_all()
+
     api.register_blueprint(ItemBluePrint)
     api.register_blueprint(StoreBluePrint)
-    
+    api.register_blueprint(UserBluePrint)
+
     return app
 

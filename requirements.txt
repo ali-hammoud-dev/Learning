@@ -1,11 +1,9 @@
-##open virtual environment: pip install -r requirements.txt
 flask
 flask-smorest
 python-dotenv
 flask-sqlalchemy
 flask-migrate
-
-## pip install -r requirements.txt
-## flask db init
-## flask db migrate
-## flask db upgrade
+flask-socketio
+eventlet
+flask-jwt-extended
+passlib
